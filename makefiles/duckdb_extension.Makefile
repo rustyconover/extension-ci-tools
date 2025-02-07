@@ -72,6 +72,7 @@ debug:
 	cmake --build build/debug --config Debug
 
 release:
+	echo "Hello Rusty"
 	mkdir -p build/release
 	cmake $(GENERATOR) $(BUILD_FLAGS) $(EXT_RELEASE_FLAGS) -DCMAKE_BUILD_TYPE=Release -S $(DUCKDB_SRCDIR) -B build/release
 	cmake --build build/release --config Release
