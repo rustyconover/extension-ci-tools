@@ -169,6 +169,9 @@ jobs:
         run: |
           df -h
 
+      - name: Verify Docker storage path
+        run: docker info | grep "Docker Root Dir"
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
