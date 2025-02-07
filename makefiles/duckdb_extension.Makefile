@@ -77,7 +77,7 @@ release:
 	echo "Listing toolchains"
 	echo `rustup toolchain list --verbose`
 	mkdir -p build/release
-	cmake $(GENERATOR) $(BUILD_FLAGS) $(EXT_RELEASE_FLAGS) -DCMAKE_BUILD_TYPE=Release --log-level=DEBUG --verbose -S $(DUCKDB_SRCDIR) -B build/release
+	cmake $(GENERATOR) $(BUILD_FLAGS) $(EXT_RELEASE_FLAGS) -DCMAKE_BUILD_TYPE=Release --log-level=DEBUG -S $(DUCKDB_SRCDIR) -B build/release
 	cmake --build build/release --config Release
 
 reldebug:
