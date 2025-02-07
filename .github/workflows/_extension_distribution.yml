@@ -165,6 +165,17 @@ jobs:
       DUCKDB_PLATFORM: ${{ matrix.duckdb_arch }}
 
     steps:
+      - name: Show disk space first
+        run: |
+          df -h
+
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+
       - name: Free up some unused space
         continue-on-error: true
         run: |
@@ -176,6 +187,10 @@ jobs:
               docker rmi $(cat package.list)
           fi
           rm package.list
+
+      - name: Show disk space after cleanup
+        run: |
+          df -h
 
       - uses: actions/checkout@v4
         name: Checkout override repository
@@ -236,7 +251,7 @@ jobs:
       - name: Create env file for docker
         run: |
           touch docker_env.txt
-          echo "VCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}" >> docker_env.txt 
+          echo "VCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}" >> docker_env.txt
           echo "BUILD_SHELL=${{ inputs.build_duckdb_shell && '1' || '0' }}" >> docker_env.txt
           echo "OPENSSL_ROOT_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}" >> docker_env.txt
           echo "OPENSSL_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}" >> docker_env.txt
@@ -304,7 +319,7 @@ jobs:
       - name: Print Rust logs
         if: ${{ inputs.rust_logs && (inputs.enable_rust || contains(format(';{0};', inputs.extra_toolchains), ';rust;')) }}
         run: |
-          for filename in build/release/rust/src/*/*build-*.log; do 
+          for filename in build/release/rust/src/*/*build-*.log; do
             echo Printing logs for file $filename
             cat $filename;
             echo Done printing logs for $filename
@@ -449,7 +464,7 @@ jobs:
       - name: Print Rust logs
         if: ${{ inputs.rust_logs && (inputs.enable_rust || contains(format(';{0};', inputs.extra_toolchains), ';rust;')) }}
         run: |
-          for filename in build/release/rust/src/*/*build-*.log; do 
+          for filename in build/release/rust/src/*/*build-*.log; do
             echo Printing logs for file $filename
             cat $filename;
             echo Done printing logs for $filename
@@ -522,9 +537,9 @@ jobs:
       - name: setup rtools gcc for vcpkg
         if:  matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw'
         run: |
-          cp C:/rtools42/x86_64-w64-mingw32.static.posix/bin/gcc.exe C:/rtools42/x86_64-w64-mingw32.static.posix/bin/x86_64-w64-mingw32-gcc.exe 
-          cp C:/rtools42/x86_64-w64-mingw32.static.posix/bin/g++.exe C:/rtools42/x86_64-w64-mingw32.static.posix/bin/x86_64-w64-mingw32-g++.exe 
-          cp C:/rtools42/x86_64-w64-mingw32.static.posix/bin/gfortran.exe C:/rtools42/x86_64-w64-mingw32.static.posix/bin/x86_64-w64-mingw32-gfortran.exe 
+          cp C:/rtools42/x86_64-w64-mingw32.static.posix/bin/gcc.exe C:/rtools42/x86_64-w64-mingw32.static.posix/bin/x86_64-w64-mingw32-gcc.exe
+          cp C:/rtools42/x86_64-w64-mingw32.static.posix/bin/g++.exe C:/rtools42/x86_64-w64-mingw32.static.posix/bin/x86_64-w64-mingw32-g++.exe
+          cp C:/rtools42/x86_64-w64-mingw32.static.posix/bin/gfortran.exe C:/rtools42/x86_64-w64-mingw32.static.posix/bin/x86_64-w64-mingw32-gfortran.exe
 
       - uses: actions/checkout@v4
         name: Checkout Extension CI tools
@@ -599,7 +614,7 @@ jobs:
         if: ${{ inputs.rust_logs && (inputs.enable_rust || contains(format(';{0};', inputs.extra_toolchains), ';rust;')) }}
         shell: bash
         run: |
-          for filename in build/release/rust/src/*/*build-*.log; do 
+          for filename in build/release/rust/src/*/*build-*.log; do
             echo Printing logs for file $filename
             cat $filename;
             echo Done printing logs for $filename
@@ -706,7 +721,7 @@ jobs:
         if: ${{ inputs.rust_logs && (inputs.enable_rust || contains(format(';{0};', inputs.extra_toolchains), ';rust;')) }}
         shell: bash
         run: |
-          for filename in build/release/rust/src/*/*build-*.log; do 
+          for filename in build/release/rust/src/*/*build-*.log; do
             echo Printing logs for file $filename
             cat $filename;
             echo Done printing logs for $filename
