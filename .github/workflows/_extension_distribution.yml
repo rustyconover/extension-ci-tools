@@ -175,6 +175,9 @@ jobs:
           root-reserve-mb: 512
           swap-size-mb: 1024
           remove-dotnet: 'true'
+          remove-haskell: 'true'
+          remove-android: 'true'
+          build-mount-path: "$GITHUB_WORKSPACE/.."
 
       - name: Free up some unused space
         continue-on-error: true
@@ -199,7 +202,7 @@ jobs:
       - name: Configure Docker with custom data directory
         run: |
           sudo mkdir -p $PWD/docker-data
-          echo '{ "data-root": "'"$PWD"'/docker-data" }' | sudo tee /etc/docker/daemon.json
+          echo '{ "data-root": "'"$PWD"'/../docker-data" }' | sudo tee /etc/docker/daemon.json
 
       - name: Start Docker with updated storage path
         run: sudo systemctl start docker
