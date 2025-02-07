@@ -44,7 +44,8 @@ endif
 
 ### For Linux musl set the proper cargo target
 ifeq ("${DUCKDB_PLATFORM}", "linux_amd64_musl")
-	RUST_FLAGS=-DRust_CARGO_TARGET=x86_64-unknown-linux-musl
+	Rust_CARGO_TARGET := x86_64-unknown-linux-musl
+	export Rust_CARGO_TARGET
 endif
 
 #### VCPKG config
