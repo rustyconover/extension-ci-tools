@@ -172,16 +172,6 @@ jobs:
       - name: Verify Docker storage path
         run: docker info | grep "Docker Root Dir"
 
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 512
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
-          remove-haskell: 'true'
-          remove-android: 'true'
-          build-mount-path: "/home/runner/work/"
-
       - name: Free up some unused space
         continue-on-error: true
         run: |
@@ -194,18 +184,14 @@ jobs:
           fi
           rm package.list
 
-      - name: Show disk space after cleanup
-        run: |
-          df -h
-
       - name: Restart docker to run in a different path
         run: |
           sudo systemctl stop docker
 
       - name: Configure Docker with custom data directory
         run: |
-          sudo mkdir -p $PWD/../docker-data
-          echo '{ "data-root": "'"$PWD"'/../docker-data" }' | sudo tee /etc/docker/daemon.json
+          sudo mkdir -p /mnt/docker-data
+          echo '{ "data-root": "/mnt/docker-data" }' | sudo tee /etc/docker/daemon.json
 
       - name: Start Docker with updated storage path
         run: sudo systemctl start docker
