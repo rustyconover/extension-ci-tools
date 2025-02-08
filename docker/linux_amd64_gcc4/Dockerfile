@@ -39,6 +39,10 @@ RUN /vcpkg/vcpkg install curl[tool]
 # The CURL after hopefully it was installed.
 RUN curl --version
 
+RUN env
+
+RUN ln -s /vcpkg/packages/curl_x64-linux/tools/curl/curl /usr/bin/curl
+
 # Common environment variables
 ENV GEN=ninja
 
