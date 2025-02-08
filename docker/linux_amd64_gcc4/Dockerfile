@@ -36,12 +36,15 @@ RUN curl --version
 RUN /vcpkg/vcpkg integrate install
 RUN /vcpkg/vcpkg install curl[tool]
 
-# The CURL after hopefully it was installed.
-RUN curl --version
 
 RUN env
 RUN mv /usr/bin/curl /usr/bin/curl.old
-RUN ln -s /vcpkg/packages/curl_x64-linux/tools/curl/curl /usr/bin/curl
+RUN ls -lR /vcpkg/installed/
+
+RUN ln -s /vcpkg/installed/x64-linux/bin/ /usr/bin/curl
+
+
+RUN curl --version
 
 
 # Common environment variables
