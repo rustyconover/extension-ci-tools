@@ -40,8 +40,7 @@ RUN /vcpkg/vcpkg install curl[tool]
 RUN env
 RUN mv /usr/bin/curl /usr/bin/curl.old
 RUN ls -lR /vcpkg/installed/
-
-RUN ln -s /vcpkg/installed/x64-linux/bin/ /usr/bin/curl
+RUN ln -s /vcpkg/installed/x64-linux/tools/curl /usr/bin/curl
 
 
 RUN curl --version
