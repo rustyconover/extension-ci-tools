@@ -256,22 +256,24 @@ jobs:
             -t duckdb/${{ matrix.duckdb_arch }} \
             ./extension-ci-tools/docker/${{ matrix.duckdb_arch }}
 
-      - name: Create env file for docker
+
+      - name: Create env file for Docker
         run: |
-          touch docker_env.txt
-          echo "ACTIONS_CACHE_URL=$ACTIONS_CACHE_URL" >> docker_env.txt
-          echo "ACTIONS_RUNTIME_TOKEN=$ACTIONS_RUNTIME_TOKEN" >> docker_env.txt
-          echo "VCPKG_BINARY_SOURCES="clear;x-gha,readwrite" >> docker_env.txt
-          echo "VCPKG_VERBOSE=1" >> docker_env.txt
-          echo "VCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}" >> docker_env.txt
-          echo "BUILD_SHELL=${{ inputs.build_duckdb_shell && '1' || '0' }}" >> docker_env.txt
-          echo "OPENSSL_ROOT_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}" >> docker_env.txt
-          echo "OPENSSL_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}" >> docker_env.txt
-          echo "OPENSSL_USE_STATIC_LIBS=true" >> docker_env.txt
-          echo "DUCKDB_PLATFORM=${{ matrix.duckdb_arch }}" >> docker_env.txt
-          echo "DUCKDB_GIT_VERSION=${{ inputs.duckdb_version }}" >> docker_env.txt
-          echo "LINUX_CI_IN_DOCKER=1" >> docker_env.txt
-          echo "TOOLCHAIN_FLAGS=${{ matrix.duckdb_arch == 'linux_arm64' && '-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ -DCMAKE_Fortran_COMPILER=aarch64-linux-gnu-gfortran' || '' }}" >> docker_env.txt
+          cat <<-EOF > docker_env.txt
+          ACTIONS_CACHE_URL=$ACTIONS_CACHE_URL
+          ACTIONS_RUNTIME_TOKEN=$ACTIONS_RUNTIME_TOKEN
+          VCPKG_BINARY_SOURCES=clear;x-gha,readwrite
+          VCPKG_VERBOSE=1
+          VCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}
+          BUILD_SHELL=${{ inputs.build_duckdb_shell && '1' || '0' }}
+          OPENSSL_ROOT_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}
+          OPENSSL_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}
+          OPENSSL_USE_STATIC_LIBS=true
+          DUCKDB_PLATFORM=${{ matrix.duckdb_arch }}
+          DUCKDB_GIT_VERSION=${{ inputs.duckdb_version }}
+          LINUX_CI_IN_DOCKER=1
+          TOOLCHAIN_FLAGS=${{ matrix.duckdb_arch == 'linux_arm64' && '-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ -DCMAKE_Fortran_COMPILER=aarch64-linux-gnu-gfortran' || '' }}
+          EOF
 
       - name: Show docker env file
         run: |
