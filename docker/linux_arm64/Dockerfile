@@ -34,6 +34,15 @@ RUN mkdir /vcpkg && \
     git fetch origin $vcpkg_commit && \
     git checkout $vcpkg_commit && \
     ./bootstrap-vcpkg.sh
+
+RUN echo 'include("${VCPKG_ROOT}/triplets/x64-linux.cmake")\n\
+    set(VCPKG_BUILD_TYPE release)\n\
+    ' > /vcpkg/triplets/x64-linux-gcc4.cmake
+
+RUN echo 'include("${VCPKG_ROOT}/triplets/x64-linux.cmake")\n\
+    set(VCPKG_BUILD_TYPE release)\n\
+    ' > /vcpkg/triplets/x64-linux-musl.cmake
+
 ENV VCPKG_ROOT=/vcpkg
 ENV VCPKG_TOOLCHAIN_PATH=/vcpkg/scripts/buildsystems/vcpkg.cmake
 
