@@ -9,7 +9,7 @@
       {
         "duckdb_arch": "linux_amd64_gcc4",
         "container": "quay.io/pypa/manylinux2014_x86_64",
-        "vcpkg_triplet": "x64-linux-gcc4"
+        "vcpkg_triplet": "x64-linux"
       },
       {
         "duckdb_arch": "linux_arm64",
@@ -19,7 +19,7 @@
       {
         "duckdb_arch": "linux_amd64_musl",
         "container": "alpine:3",
-        "vcpkg_triplet": "x64-linux-musl"
+        "vcpkg_triplet": "x64-linux"
       }
     ]
   },

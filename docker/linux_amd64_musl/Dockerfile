@@ -21,8 +21,6 @@ RUN mkdir /vcpkg && \
 ENV VCPKG_ROOT=/vcpkg
 ENV VCPKG_TOOLCHAIN_PATH=/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-RUN echo 'include("/vcpkg/triplets/x64-linux.cmake") #musl' > /vcpkg/triplets/x64-linux-musl.cmake
-
 # Common environment variables
 ENV GEN=ninja
 ENV DUCKDB_PLATFORM=linux_amd64_musl

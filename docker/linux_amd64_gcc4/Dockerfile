@@ -30,7 +30,14 @@ RUN mkdir /vcpkg && \
 ENV VCPKG_ROOT=/vcpkg
 ENV VCPKG_TOOLCHAIN_PATH=/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-RUN echo 'include("/vcpkg/triplets/x64-linux.cmake") #gcc4' > /vcpkg/triplets/x64-linux-gcc4.cmake
+# The CURL
+RUN curl --version
+
+RUN ./vcpkg integrate install
+RUN vcpkg install curl[tool]
+
+# The CURL after hopefully it was installed.
+RUN curl --version
 
 # Common environment variables
 ENV GEN=ninja
