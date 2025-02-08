@@ -33,8 +33,8 @@ ENV VCPKG_TOOLCHAIN_PATH=/vcpkg/scripts/buildsystems/vcpkg.cmake
 # The CURL
 RUN curl --version
 
-RUN ./vcpkg integrate install
-RUN vcpkg install curl[tool]
+RUN /vcpkg/vcpkg integrate install
+RUN /vcpkg/vcpkg install curl[tool]
 
 # The CURL after hopefully it was installed.
 RUN curl --version
