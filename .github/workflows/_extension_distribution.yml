@@ -246,6 +246,28 @@ jobs:
           repository: ${{ inputs.override_ci_tools_repository }}
           fetch-depth: 0
 
+          - name: Create env file for Docker
+          run: |
+            cat <<-EOF > docker_env.txt
+            ACTIONS_CACHE_URL=$ACTIONS_CACHE_URL
+            ACTIONS_RUNTIME_TOKEN=$ACTIONS_RUNTIME_TOKEN
+            VCPKG_BINARY_SOURCES=clear;x-gha,readwrite
+            VCPKG_VERBOSE=ON
+            VCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}
+            BUILD_SHELL=${{ inputs.build_duckdb_shell && '1' || '0' }}
+            OPENSSL_ROOT_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}
+            OPENSSL_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}
+            OPENSSL_USE_STATIC_LIBS=true
+            DUCKDB_PLATFORM=${{ matrix.duckdb_arch }}
+            DUCKDB_GIT_VERSION=${{ inputs.duckdb_version }}
+            LINUX_CI_IN_DOCKER=1
+            TOOLCHAIN_FLAGS=${{ matrix.duckdb_arch == 'linux_arm64' && '-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ -DCMAKE_Fortran_COMPILER=aarch64-linux-gnu-gfortran' || '' }}
+            EOF
+
+      - name: Show docker env file
+        run: |
+          cat docker_env.txt
+
       - name: Build Docker image
         shell: bash
         run: |
@@ -255,29 +277,6 @@ jobs:
             --build-arg 'extra_toolchains=${{ inputs.enable_rust  && format(';{0};rust;', inputs.extra_toolchains) || format(';{0};', inputs.extra_toolchains) }}' \
             -t duckdb/${{ matrix.duckdb_arch }} \
             ./extension-ci-tools/docker/${{ matrix.duckdb_arch }}
-
-
-      - name: Create env file for Docker
-        run: |
-          cat <<-EOF > docker_env.txt
-          ACTIONS_CACHE_URL=$ACTIONS_CACHE_URL
-          ACTIONS_RUNTIME_TOKEN=$ACTIONS_RUNTIME_TOKEN
-          VCPKG_BINARY_SOURCES=clear;x-gha,readwrite
-          VCPKG_VERBOSE=1
-          VCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}
-          BUILD_SHELL=${{ inputs.build_duckdb_shell && '1' || '0' }}
-          OPENSSL_ROOT_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}
-          OPENSSL_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_triplet }}
-          OPENSSL_USE_STATIC_LIBS=true
-          DUCKDB_PLATFORM=${{ matrix.duckdb_arch }}
-          DUCKDB_GIT_VERSION=${{ inputs.duckdb_version }}
-          LINUX_CI_IN_DOCKER=1
-          TOOLCHAIN_FLAGS=${{ matrix.duckdb_arch == 'linux_arm64' && '-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ -DCMAKE_Fortran_COMPILER=aarch64-linux-gnu-gfortran' || '' }}
-          EOF
-
-      - name: Show docker env file
-        run: |
-          cat docker_env.txt
 
       - name: Generate timestamp for Ccache entry
         shell: cmake -P {0}
@@ -353,12 +352,20 @@ jobs:
     env:
       VCPKG_TOOLCHAIN_PATH: ${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
       VCPKG_TARGET_TRIPLET: ${{ matrix.vcpkg_triplet }}
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
       OSX_BUILD_ARCH: ${{ matrix.osx_build_arch }}
       GEN: ninja
       BUILD_SHELL: ${{ inputs.build_duckdb_shell && '1' || '0' }}
       DUCKDB_PLATFORM: ${{ matrix.duckdb_arch }}
 
     steps:
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
       - uses: actions/checkout@v4
         name: Checkout override repository
         if: ${{inputs.override_repository != ''}}
@@ -498,12 +505,20 @@ jobs:
     env:
       VCPKG_TOOLCHAIN_PATH: ${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
       VCPKG_TARGET_TRIPLET: ${{ matrix.vcpkg_triplet }}
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
       BUILD_SHELL: ${{ inputs.build_duckdb_shell && '1' || '0' }}
       DUCKDB_PLATFORM: ${{ matrix.duckdb_arch }}
       CC: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 'gcc' || '' }}
       CXX: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 'g++' || '' }}
 
     steps:
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
       - name: Keep \n line endings
         shell: bash
         run: |
