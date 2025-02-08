@@ -30,7 +30,7 @@ RUN mkdir /vcpkg && \
 ENV VCPKG_ROOT=/vcpkg
 ENV VCPKG_TOOLCHAIN_PATH=/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-RUN echo 'include("${VCPKG_ROOT}/triplets/x64-linux.cmake")' > /vcpkg/triplets/x64-linux-gcc4.cmake
+RUN echo 'include("/vcpkg/triplets/x64-linux.cmake")' > /vcpkg/triplets/x64-linux-gcc4.cmake
 
 # Common environment variables
 ENV GEN=ninja
