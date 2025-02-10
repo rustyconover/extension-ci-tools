@@ -561,7 +561,6 @@ jobs:
         continue-on-error: true
         with:
           key: ${{ github.job }}-${{ matrix.duckdb_arch }}
-          variant: sccache
 
       - uses: r-lib/actions/setup-r@v2
         if:  matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw'
@@ -622,7 +621,7 @@ jobs:
         env:
           DUCKDB_PLATFORM: ${{ matrix.duckdb_arch }}
           DUCKDB_PLATFORM_RTOOLS: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 1 || 0 }}
-          USE_SCCACHE: 1
+          USE_CCACHE: 1
         run: |
           make release
 
