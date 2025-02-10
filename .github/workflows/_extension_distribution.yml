@@ -505,6 +505,7 @@ jobs:
       DUCKDB_PLATFORM: ${{ matrix.duckdb_arch }}
       CC: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 'gcc' || '' }}
       CXX: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 'g++' || '' }}
+      GEN: ninja
 
     steps:
       - name: Export GitHub Actions cache environment variables
@@ -554,6 +555,10 @@ jobs:
         if: ${{ contains(format(';{0};', inputs.extra_toolchains), ';parser_tools;')}}
         run: |
           choco install winflexbison3
+
+      - name: Install ninja
+        run: |
+            choco install ninja -y
 
       - name: Setup Ccache
         uses: hendrikmuhs/ccache-action@main
@@ -621,6 +626,8 @@ jobs:
           DUCKDB_PLATFORM: ${{ matrix.duckdb_arch }}
           DUCKDB_PLATFORM_RTOOLS: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 1 || 0 }}
           EXT_FLAGS: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          CMAKE_CXX_COMPILER_LAUNCHER: ccache
+          CMAKE_CXX_COMPILER_LAUNCHER: ccache
         run: |
           make release
 
