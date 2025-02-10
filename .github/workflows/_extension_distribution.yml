@@ -628,12 +628,8 @@ jobs:
           EXT_FLAGS: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         run: |
           if ($env:DUCKDB_PLATFORM_RTOOLS -eq "0") {
-            . "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-            Get-ChildItem Env: | Format-Table -Property Name, Value
-            $env:CC = "$env:VCToolsInstallDir\cl.exe"
-            $env:CXX = "$env:VCToolsInstallDir\cl.exe"
-            Write-Host "CC: $env:CC"
-            Write-Host "CXX: $env:CXX"
+            $env:CC = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/cl.exe"
+            $env:CXX = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/cl.exe"
           }
           make release
 
