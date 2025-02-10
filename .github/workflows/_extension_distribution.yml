@@ -629,6 +629,7 @@ jobs:
         run: |
           if ($env:DUCKDB_PLATFORM_RTOOLS -eq "0") {
             & "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+            Get-ChildItem Env: | Format-Table -Property Name, Value
             $env:CC = "$env:VCToolsInstallDir\cl.exe"
             $env:CXX = "$env:VCToolsInstallDir\cl.exe"
             Write-Host "CC: $env:CC"
