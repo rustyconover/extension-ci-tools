@@ -18,12 +18,12 @@ DUCKDB_PATH="/duckdb"
 DUCKDB_SRCDIR ?= "./duckdb/"
 
 # For non-MinGW windows the path is slightly different
-ifeq ($(OS),Windows_NT)
-ifneq ($(CXX),g++)
-	TEST_PATH="/test/Release/unittest.exe"
-	DUCKDB_PATH="/Release/duckdb.exe"
-endif
-endif
+# ifeq ($(OS),Windows_NT)
+# ifneq ($(CXX),g++)
+# 	TEST_PATH="/test/Release/unittest.exe"
+# 	DUCKDB_PATH="/Release/duckdb.exe"
+# endif
+# endif
 
 #### Core extensions, allows easily building one of the core extensions
 ifneq ($(CORE_EXTENSIONS),)

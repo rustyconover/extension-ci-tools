@@ -606,6 +606,15 @@ jobs:
         run: |
           make set_duckdb_tag
 
+      - name: Set up vcpkg cache
+        id: vcpkg-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/vcpkg
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            vcpkg-${{ runner.os }}-
+
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11.1
         with:
@@ -640,7 +649,7 @@ jobs:
           DUCKDB_PLATFORM_RTOOLS: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 1 || 0 }}
         shell: cmd
         run: |
-          dir /s
+          dir ./build/release/test/unittest.exe
           make test_release
 
       - uses: actions/upload-artifact@v4
