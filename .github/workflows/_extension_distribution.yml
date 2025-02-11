@@ -565,7 +565,6 @@ jobs:
         continue-on-error: true
         with:
           key: ${{ github.job }}-${{ matrix.duckdb_arch }}
-          variant: sccache
 
       - uses: r-lib/actions/setup-r@v2
         if:  matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw'
@@ -613,6 +612,11 @@ jobs:
           vcpkgGitCommitId: ${{ inputs.vcpkg_commit }}
           vcpkgGitURL: ${{ inputs.vcpkg_url }}
 
+      - name: Dump environemnt
+        shell: bash
+        run: |
+          env
+
       - name: Run configure
         shell: bash
         env:
@@ -626,7 +630,7 @@ jobs:
         env:
           DUCKDB_PLATFORM: ${{ matrix.duckdb_arch }}
           DUCKDB_PLATFORM_RTOOLS: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 1 || 0 }}
-          EXT_FLAGS: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+          EXT_FLAGS: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         shell: cmd
         run: |
           if "%DUCKDB_PLATFORM_RTOOLS%" == "0" (
@@ -660,6 +664,12 @@ jobs:
             cat $filename;
             echo Done printing logs for $filename
           done
+
+
+      - name: Dump environemnt
+        shell: bash
+        run: |
+          env
 
   wasm:
     name: DuckDB-Wasm
