@@ -643,6 +643,7 @@ jobs:
         run: |
           if "%DUCKDB_PLATFORM_RTOOLS%" == "0" (
             call "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+            mv "C:\Program Files\Git\usr\bin\link.exe" "C:\Program Files\Git\usr\bin\link-git.exe"
           )
           make release
 
