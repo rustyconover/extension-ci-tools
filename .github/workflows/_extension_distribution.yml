@@ -616,6 +616,8 @@ jobs:
         shell: bash
         run: |
           env
+          type zstd
+          type tar
 
       - name: Run configure
         shell: bash
@@ -670,6 +672,8 @@ jobs:
         shell: bash
         run: |
           env
+          type zstd
+          type tar
 
   wasm:
     name: DuckDB-Wasm
