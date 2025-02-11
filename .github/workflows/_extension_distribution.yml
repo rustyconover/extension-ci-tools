@@ -623,6 +623,7 @@ jobs:
           where zstd
           where tar
           where ccache
+          where link
 
       - name: Run configure
         shell: bash
@@ -640,6 +641,9 @@ jobs:
           EXT_FLAGS: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         shell: cmd
         run: |
+          if "%DUCKDB_PLATFORM_RTOOLS%" == "0" (
+            call "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+          )
           make release
 
       - name: Test extension
