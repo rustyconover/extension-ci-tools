@@ -630,10 +630,10 @@ jobs:
           env
 
       - name: Dump commands
-          shell: cmd
-          run: |
-            where zstd
-            where tar
+        shell: cmd
+        run: |
+          where zstd
+          where tar
 
       - name: Run configure
         shell: bash
