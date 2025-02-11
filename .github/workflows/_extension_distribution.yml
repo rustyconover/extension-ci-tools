@@ -566,8 +566,20 @@ jobs:
         with:
           key: ${{ github.job }}-${{ matrix.duckdb_arch }}
 
+      - name: Restore RTools42 cache
+        uses: actions/cache@v3
+        with:
+          path: C:\rtools42
+          key: rtools42-${{ runner.os }}-${{ hashFiles('**/*') }}
+          restore-keys: |
+            rtools42-${{ runner.os }}-
+
+      - name: Check if cache hit
+        id: cache-hit
+        run: echo "::set-output name=cache-hit::$(if [ -d 'C:\rtools42' ]; then echo 'true'; else echo 'false'; fi)"
+
       - uses: r-lib/actions/setup-r@v2
-        if:  matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw'
+        if: (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && steps.cache-hit.outputs.cache-hit == 'false'
         with:
           r-version: 'devel'
           update-rtools: true
@@ -616,8 +628,12 @@ jobs:
         shell: bash
         run: |
           env
-          type zstd
-          type tar
+
+      - name: Dump commands
+          shell: cmd
+          run: |
+            where zstd
+            where tar
 
       - name: Run configure
         shell: bash
@@ -672,8 +688,13 @@ jobs:
         shell: bash
         run: |
           env
-          type zstd
-          type tar
+
+      - name: Dump commands
+        shell: cmd
+        run: |
+          where zstd
+          where tar
+
 
   wasm:
     name: DuckDB-Wasm
