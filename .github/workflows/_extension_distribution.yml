@@ -683,6 +683,12 @@ jobs:
           where zstd
           where tar
 
+      - name: Move rtools zstd out of the way, so ccache can work
+        if: (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw')
+        shell: cmd
+        run: |
+          mv C:\rtools42\usr\bin\zstd.exe C:\rtools42\usr\bin\zstd-rtools.exe
+
 
   wasm:
     name: DuckDB-Wasm
