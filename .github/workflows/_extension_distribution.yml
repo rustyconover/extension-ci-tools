@@ -640,7 +640,7 @@ jobs:
           if "%DUCKDB_PLATFORM_RTOOLS%" == "0" (
             call "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
             REM Rename link.exe to link-git.exe to avoid conflicts with git supplied linker.
-            mv "C:\Program Files\Git\usr\bin\link.exe" "C:\Program Files\Git\usr\bin\link-git.exe"
+            IF EXIST "C:\Program Files\Git\usr\bin\link.exe" mv "C:\Program Files\Git\usr\bin\link.exe" "C:\Program Files\Git\usr\bin\link-git.exe"
           )
           make release
 
@@ -673,7 +673,7 @@ jobs:
         if: (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw')
         shell: cmd
         run: |
-          mv C:\rtools42\usr\bin\zstd.exe C:\rtools42\usr\bin\zstd-rtools.exe
+          IF EXIST C:\rtools42\usr\bin\zstd.exe mv C:\rtools42\usr\bin\zstd.exe C:\rtools42\usr\bin\zstd-rtools.exe
 
 
   wasm:
