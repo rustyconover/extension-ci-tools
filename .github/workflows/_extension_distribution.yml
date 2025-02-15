@@ -566,7 +566,7 @@ jobs:
         with:
           key: ${{ github.job }}-${{ matrix.duckdb_arch }}
 
-      - name: Cache rtools installation
+      - name: Cache rtools42 installation
         uses: actions/cache@v4
         id: rtools_cache
         with:
