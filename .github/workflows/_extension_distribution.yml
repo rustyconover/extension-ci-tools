@@ -606,18 +606,15 @@ jobs:
         run: |
           make set_duckdb_tag
 
-      - name: Cache vcpkg
-        id: cache_vcpkg
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/vcpkg
-          key: vcpkg-${{ matrix.duckdb_arch }}
-
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11.1
         with:
           vcpkgGitCommitId: ${{ inputs.vcpkg_commit }}
           vcpkgGitURL: ${{ inputs.vcpkg_url }}
+
+      - name: Display vcpkg triplets
+        run: |
+          vcpkg help triplet
 
       - name: Run configure
         shell: bash
