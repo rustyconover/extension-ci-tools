@@ -482,7 +482,7 @@ jobs:
       - name: Dump debug log if it exists
         if: failure()
         run: |
-          if [ -f /Users/runner/work/duckdb-airport-extension/duckdb-airport-extension/build/release/vcpkg-manifest-install.log]; then
+          if [ -f /Users/runner/work/duckdb-airport-extension/duckdb-airport-extension/build/release/vcpkg-manifest-install.log ]; then
             echo "------ EXTRA LOG ------"
             cat /Users/runner/work/duckdb-airport-extension/duckdb-airport-extension/build/release/vcpkg-manifest-install.log
             echo "------------------------"
