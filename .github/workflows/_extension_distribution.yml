@@ -479,6 +479,17 @@ jobs:
         run: |
           make release
 
+      - name: Dump debug log if it exists
+        if: failure()
+        run: |
+          if [ -f /Users/runner/work/duckdb-airport-extension/duckdb-airport-extension/build/release/vcpkg-manifest-install.log]; then
+            echo "------ EXTRA LOG ------"
+            cat /Users/runner/work/duckdb-airport-extension/duckdb-airport-extension/build/release/vcpkg-manifest-install.log
+            echo "------------------------"
+          else
+            echo "No extra log found."
+          fi
+
       - name: Test Extension
         if: ${{ matrix.osx_build_arch == 'arm64' && inputs.skip_tests == false }}
         shell: bash
