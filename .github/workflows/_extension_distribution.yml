@@ -14,10 +14,8 @@ on:
     secrets:
       AWS_ACCESS_KEY_ID:
         required: false
-        type: string
       AWS_SECRET_ACCESS_KEY:
         required: false
-        type: string
     inputs:
       # The name with which the extension will be built
       extension_name:
