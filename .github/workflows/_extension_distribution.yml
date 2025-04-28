@@ -11,6 +11,13 @@
 name: Extension distribution
 on:
   workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: false
+        type: string
+      AWS_SECRET_ACCESS_KEY:
+        required: false
+        type: string
     inputs:
       # The name with which the extension will be built
       extension_name:
@@ -163,7 +170,6 @@ jobs:
       VCPKG_BINARY_SOURCES: ${{ vars.VCPKG_BINARY_SOURCES }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
       VCPKG_TOOLCHAIN_PATH: ${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
       GEN: ninja
       BUILD_SHELL: ${{ inputs.build_duckdb_shell && '1' || '0' }}
@@ -268,7 +274,6 @@ jobs:
           VCPKG_BINARY_SOURCES=${{ vars.VCPKG_BINARY_SOURCES }}
           AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION=${{ secrets.AWS_REGION }}
           VCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_target_triplet }}
           BUILD_SHELL=${{ inputs.build_duckdb_shell && '1' || '0' }}
           OPENSSL_ROOT_DIR=/duckdb_build_dir/build/release/vcpkg_installed/${{ matrix.vcpkg_target_triplet }}
@@ -358,7 +363,6 @@ jobs:
       VCPKG_BINARY_SOURCES: ${{ vars.VCPKG_BINARY_SOURCES }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
       OSX_BUILD_ARCH: ${{ matrix.osx_build_arch }}
       GEN: ninja
       BUILD_SHELL: ${{ inputs.build_duckdb_shell && '1' || '0' }}
@@ -371,6 +375,7 @@ jobs:
           script: |
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
 
       - uses: actions/checkout@v4
         name: Checkout override repository
@@ -526,7 +531,6 @@ jobs:
       VCPKG_BINARY_SOURCES: ${{ vars.VCPKG_BINARY_SOURCES }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
       BUILD_SHELL: ${{ inputs.build_duckdb_shell && '1' || '0' }}
       DUCKDB_PLATFORM: ${{ matrix.duckdb_arch }}
       CC: ${{ (matrix.duckdb_arch == 'windows_amd64_rtools' || matrix.duckdb_arch == 'windows_amd64_mingw') && 'gcc' || '' }}
