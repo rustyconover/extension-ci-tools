@@ -13,9 +13,14 @@ RUN yum install -y nodejs
 RUN yum install -y curl zip unzip tar autoconf
 RUN yum install -y ninja-build
 RUN yum install -y perl-IPC-Cmd
-RUN yum install -y ccache awscli
+RUN yum install -y ccache
 RUN yum install -y java-11-openjdk-devel maven
 RUN yum install -y libgcc*i686 libstdc++*i686 glibc*i686 libgfortran*i686
+
+# Install the AWS cli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.0.30.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
 
 # Setup VCPKG n a mounted volume TODO: figure out how to cache this
 ARG vcpkg_url
