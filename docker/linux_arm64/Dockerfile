@@ -7,7 +7,12 @@ RUN apt-get update -qq
 RUN apt-get install -y -qq software-properties-common
 RUN apt-get install -y -qq --fix-missing ninja-build make gcc-multilib g++-multilib libssl-dev wget openjdk-8-jdk zip maven unixodbc-dev libc6-dev-i386 lib32readline6-dev libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip build-essential checkinstall libffi-dev curl libz-dev openssh-client pkg-config
 RUN apt-get install -y -qq ccache autoconf
-RUN apt-get install -y -qq awscli
+
+# Install the AWS cli since the package is too old
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip -q awscliv2.zip
+RUN ./aws/install
+RUN aws --version
 
 # Setup cross compiler because GH actions does not have open source arm runners yet
 RUN apt-get install -y -qq gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
