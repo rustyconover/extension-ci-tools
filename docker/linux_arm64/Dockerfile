@@ -7,7 +7,7 @@ RUN apt-get install -y -qq --fix-missing ninja-build make gcc-multilib g++-multi
 RUN apt-get install -y -qq ccache autoconf
 
 # Install the AWS cli
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
 RUN unzip -q awscliv2.zip
 RUN ./aws/install
 RUN aws --version
