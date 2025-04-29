@@ -8,8 +8,9 @@ RUN apt-get install -y -qq ccache autoconf
 
 # Install the AWS cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-RUN unzip awscliv2.zip
+RUN unzip -q awscliv2.zip
 RUN ./aws/install
+RUN aws --version
 
 # Setup cross compiler because GH actions does not have open source arm runners yet
 RUN apt-get install -y -qq gcc-aarch64-linux-gnu g++-aarch64-linux-gnu

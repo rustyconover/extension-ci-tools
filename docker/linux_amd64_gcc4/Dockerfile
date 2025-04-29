@@ -19,8 +19,9 @@ RUN yum install -y libgcc*i686 libstdc++*i686 glibc*i686 libgfortran*i686
 
 # Install the AWS cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-RUN unzip awscliv2.zip
+RUN unzip -q awscliv2.zip
 RUN ./aws/install
+RUN aws --version
 
 # Setup VCPKG n a mounted volume TODO: figure out how to cache this
 ARG vcpkg_url

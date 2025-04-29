@@ -12,8 +12,9 @@ RUN apt-get install -y -qq ccache
 
 # Install the AWS cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-RUN unzip awscliv2.zip
+RUN unzip -q awscliv2.zip
 RUN ./aws/install
+RUN aws --version
 
 # Install cmake 3.31
 RUN mkdir /cmake_3_31 && \
