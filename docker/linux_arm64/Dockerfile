@@ -1,5 +1,7 @@
 FROM ubuntu:18.04
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Setup the basic necessities
 RUN apt-get update -qq
 RUN apt-get install -y -qq software-properties-common
