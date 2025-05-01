@@ -41,7 +41,7 @@ function(vcpkg_cmake_build)
         vcpkg_list(SET target_param "--target" "${arg_TARGET}")
     endif()
 
-    foreach(build_type IN ITEMS release)
+    foreach(build_type IN ITEMS debug release)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "${build_type}")
             if("${build_type}" STREQUAL "debug")
                 set(short_build_type "dbg")
@@ -51,7 +51,7 @@ function(vcpkg_cmake_build)
                 set(config "Release")
             endif()
 
-            message(STATUS "Building ${TARGET_TRIPLET}")
+            message(STATUS "Building ${TARGET_TRIPLET}-${short_build_type}")
 
             if(arg_ADD_BIN_TO_PATH)
                 vcpkg_backup_env_variables(VARS PATH)
@@ -67,8 +67,8 @@ function(vcpkg_cmake_build)
                     COMMAND
                         "${CMAKE_COMMAND}" --build . --config "${config}" ${target_param}
                         -- ${build_param} ${no_parallel_param}
-                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
-                    LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}"
+                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_build_type}"
+                    LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-${short_build_type}"
                 )
             else()
                 vcpkg_execute_build_process(
