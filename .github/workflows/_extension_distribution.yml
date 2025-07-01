@@ -121,6 +121,15 @@ on:
         required: false
         type: boolean
         default: true
+      run_tests_container:
+        required: false
+        type: string
+        default: ""
+      run_tests_container_port:
+        required: false
+        type: string
+        default: 8000
+
       # DEPRECATED: use extra_toolchains instead
       enable_rust:
         required: false
@@ -361,10 +370,26 @@ jobs:
           path: ./ccache_dir
           key: ccache-extension-distribution-${{ matrix.duckdb_arch }}-${{ inputs.duckdb_version }}-${{ steps.ccache_timestamp.outputs.timestamp }}
 
+      - name: Create docker network
+        run: |
+          docker network create test-net || echo "Network already exists"
+
+      - name: Start test container using Docker networking if necessary.
+        if: ${{ vars.run_tests_container != "" && inputs.skip_tests == false }}
+        run: |
+          NETWORK_OPTION=""
+          if [[ "${{ matrix.duckdb_arch }}" != "linux_arm64" ]]; then
+            NETWORK_OPTION="--network test-net"
+          fi
+          docker run -d --name test-container \
+            $NETWORK_OPTION \
+            -p 8000:${{ inputs.run_tests_container_port }} \
+            ${{ inputs.run_tests_container }}
+
       - name: Test extension (inside docker)
         if: ${{ matrix.duckdb_arch != 'linux_arm64' && inputs.skip_tests == false }}
         run: |
-          docker run --env-file=docker_env.txt -v `pwd`:/duckdb_build_dir -v `pwd`/ccache_dir:/ccache_dir duckdb/${{ matrix.duckdb_arch }} make test_release
+          docker run --network test-net --env-file=docker_env.txt -v `pwd`:/duckdb_build_dir -v `pwd`/ccache_dir:/ccache_dir duckdb/${{ matrix.duckdb_arch }} make test_release
 
       - name: Test extension (outside docker)
         if: ${{ matrix.duckdb_arch != 'linux_arm64' && inputs.skip_tests == false }}
@@ -553,6 +578,14 @@ jobs:
         shell: bash
         run: |
           EXTENSION_NAME=${{ inputs.extension_name }} EXTENSION_CANONICAL=${{ inputs.extension_canonical }} make release
+
+      - name: Start test container
+        if: ${{ vars.run_tests_container != "" && inputs.skip_tests == false }}
+        run: |
+          docker run -d --name test-container \
+            $NETWORK_OPTION \
+            -p 8000:${{ inputs.run_tests_container_port }} \
+            ${{ inputs.run_tests_container }}
 
       - name: Test Extension
         if: ${{ matrix.osx_build_arch == 'arm64' && inputs.skip_tests == false }}
@@ -751,6 +784,14 @@ jobs:
             mv "C:\Program Files\Git\usr\bin\link.exe" "C:\Program Files\Git\usr\bin\link-git.exe"
           )
           make release
+
+      - name: Start test container
+        if: ${{ vars.run_tests_container != "" && inputs.skip_tests == false }}
+        run: |
+          docker run -d --name test-container \
+            $NETWORK_OPTION \
+            -p 8000:${{ inputs.run_tests_container_port }} \
+            ${{ inputs.run_tests_container }}
 
       - name: Test extension
         if: ${{ inputs.skip_tests == false }}
