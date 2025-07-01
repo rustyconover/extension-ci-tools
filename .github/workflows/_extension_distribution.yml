@@ -580,7 +580,7 @@ jobs:
           EXTENSION_NAME=${{ inputs.extension_name }} EXTENSION_CANONICAL=${{ inputs.extension_canonical }} make release
 
       - name: Start test container
-        if: ${{ inputs.run_tests_container != '' && inputs.skip_tests == false }}
+        if: ${{ matrix.osx_build_arch == 'arm64' && inputs.run_tests_container != '' && inputs.skip_tests == false }}
         run: |
           docker run -d --name test-container \
             $NETWORK_OPTION \
